@@ -1,0 +1,11 @@
+curl -X POST http://localhost:8000/api/get-token/ \
+-H "Content-Type: application/json" \
+-d '{"password": "dein_passwort"}'
+
+curl -X POST http://localhost:8000/api/verify-token/ \
+-H "Content-Type: application/json" \
+-d '{"token": "dein_token"}'
+
+curl -X POST http://localhost:8000/api/blacklist-token/ \
+-H "Content-Type: application/json" \
+-d '{"token": "dein_access_token"}'
