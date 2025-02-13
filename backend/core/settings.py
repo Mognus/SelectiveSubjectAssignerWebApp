@@ -38,8 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework.authtoken',
-    'subjects',
+    'selective_subjects',
 ]
 
 MIDDLEWARE = [
@@ -102,7 +101,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# AUTH_USER_MODEL = 'subjects.User'
+AUTH_USER_MODEL = 'selective_subjects.User'
 
 
 # Internationalization
