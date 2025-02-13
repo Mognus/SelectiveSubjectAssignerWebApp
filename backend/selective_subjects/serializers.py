@@ -9,5 +9,4 @@ class ElectiveSubjectChoiceSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'student_id', 'username', 'first_choice', 
-                 'second_choice', 'third_choice']
+        fields = '__all__'

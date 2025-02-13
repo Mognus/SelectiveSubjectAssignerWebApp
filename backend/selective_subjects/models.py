@@ -14,7 +14,7 @@ class ElectiveSubjectChoice(models.Model):
 
 class CustomUser(AbstractUser):
     # ID wird automatisch von Django verwaltet
-    student_id = models.IntegerField(unique=True)
+    student_id = models.IntegerField(unique=True, null=True)
     first_choice = models.ForeignKey(
         ElectiveSubjectChoice, 
         on_delete=models.SET_NULL,
