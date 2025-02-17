@@ -1,23 +1,32 @@
-version: '3.8'
-
 services:
   web:
     build: ./backend
     command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - static_volume:/app/staticfiles
+      - frontend_build:/app/frontend_dist
     expose:
       - 8000
   
+  frontend:
+    build: ./frontend
+    volumes:
+      - frontend_build:/app/frontend_dist
+    depends_on:
+      - web
+
   nginx:
     image: nginx:alpine
     volumes:
       - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf:ro
       - static_volume:/usr/share/nginx/html/static
+      - frontend_build:/usr/share/nginx/html/frontend
     ports:
       - "80:80"
     depends_on:
       - web
+      - frontend
 
 volumes:
   static_volume:
+  frontend_build:

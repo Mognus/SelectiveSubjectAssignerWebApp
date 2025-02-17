@@ -1,5 +1,12 @@
 <script setup lang="ts">
 import Button from 'primevue/button';
+import {useRouter} from "vue-router";
+
+const router = useRouter();
+
+const redirect = () => {
+  router.push('/login');
+}
 </script>
 
 <template>
@@ -13,7 +20,7 @@ import Button from 'primevue/button';
         <router-link to="/subjects" active-class="active" class="button">Fächer</router-link>
       </div>
       <div class="actions">
-        <Button label="Login" />
+        <Button @click="redirect" label="Login" />
       </div>
     </div>
   </div>
@@ -61,23 +68,6 @@ a:active{
   display: flex;
   flex-direction: row;
   gap: 1rem;
-}
-
-a.active:before, a:hover:before {
-  background: snow;
-  opacity: .8;
-}
-
-a:before {
-  background: #0a0505;
-  border-radius: 10px;
-  bottom: 0;
-  content: "";
-  height: 3px;
-  left: 0;
-  opacity: .2;
-  position: absolute;
-  width: 100%;
 }
 
 /* Media Querries */
