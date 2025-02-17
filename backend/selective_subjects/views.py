@@ -1,5 +1,5 @@
 from rest_framework import viewsets, status
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from .models import ElectiveSubjectChoice, CustomUser
 from .serializers import ElectiveSubjectChoiceSerializer, UserSerializer
 from rest_framework.decorators import api_view, permission_classes
@@ -12,12 +12,18 @@ from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, Ou
 class ElectiveSubjectChoiceViewSet(viewsets.ModelViewSet):
     queryset = ElectiveSubjectChoice.objects.all()
     serializer_class = ElectiveSubjectChoiceSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = CustomUser.objects.all()
+    queryset = CustomUser.objects.all()  # Füge diese Zeile hinzu
     serializer_class = UserSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_superuser:
+            return CustomUser.objects.all()
+        return CustomUser.objects.filter(id=user.id)
 
 
 @api_view(['POST'])
