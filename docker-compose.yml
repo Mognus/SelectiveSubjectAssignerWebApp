@@ -7,7 +7,7 @@ services:
       - frontend_build:/app/frontend_dist
     expose:
       - 8000
-  
+
   frontend:
     build: ./frontend
     volumes:
