@@ -1,0 +1,30 @@
+{
+    "subjectList": [
+        {
+            "subjectName": "Informatik",
+            "subjectDescription": "Grundlagen der Programmierung"
+        },
+        {
+            "subjectName": "Kunst",
+            "subjectDescription": "Digitale Mediengestaltung"
+        },
+        {
+            "subjectName": "Sport",
+            "subjectDescription": "Mannschaftssport und Koordination"
+        }
+    ],
+    "studentList": [
+        {
+            "studentId": "12345",
+            "OTP": "abcd-1111"
+        },
+        {
+            "studentId": "12346",
+            "OTP": "abcd-2222"
+        },
+        {
+            "studentId": "12347",
+            "OTP": "abcd-3333"
+        }
+    ]
+}

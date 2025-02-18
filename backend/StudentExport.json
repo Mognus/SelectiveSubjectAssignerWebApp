@@ -1,0 +1,39 @@
+{
+  "subjectList": [
+    {
+      "subjectId": 1,
+      "subjectName": "Informatik",
+      "subjectDescription": "Grundlagen der Programmierung"
+    },
+    {
+      "subjectId": 2,
+      "subjectName": "Kunst",
+      "subjectDescription": "Digitale Mediengestaltung"
+    },
+    {
+      "subjectId": 3,
+      "subjectName": "Sport",
+      "subjectDescription": "Mannschaftssport und Koordination"
+    }
+  ],
+  "studentList": [
+    {
+      "studentId": "12345",
+      "firstChoice": 1,
+      "secondChoice": 2,
+      "thirdChoice": 3
+    },
+    {
+      "studentId": "12346",
+      "firstChoice": 3,
+      "secondChoice": 1,
+      "thirdChoice": 2
+    },
+    {
+      "studentId": "12347",
+      "firstChoice": 2,
+      "secondChoice": 3,
+      "thirdChoice": 1
+    }
+  ]
+}

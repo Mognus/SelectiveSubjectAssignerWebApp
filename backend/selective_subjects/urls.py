@@ -12,4 +12,6 @@ urlpatterns = [
     path('api/get-token/', views.get_token_by_password, name='get_token'),
     path('api/blacklist-token/', views.blacklist_token, name='token_blacklist'),
     path('api/verify-token/', TokenVerifyView.as_view(), name='verify_token'),
+    path('api/import-data/', views.import_data, name='import_data'),
+    path('api/export-data/', views.export_data, name='export_data'),
 ]
