@@ -1,17 +1,35 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { useAuthStore } from '../stores/authStore'
+import { useRouter } from 'vue-router'
+import { useToast } from 'primevue/usetoast'
+import Toast from 'primevue/toast';
 
+const authStore = useAuthStore()
+const router = useRouter()
+const toast = useToast()
+
+const password = ref('')
+
+const handleLogin = async () => {
+  try {
+    await authStore.login(password.value)
+    toast.add({ severity: 'success', summary: 'Erfolg', detail: 'Login erfolgreich', life: 10000 })
+    await router.push('/')
+  } catch (error) {
+    console.error(error);
+    toast.add({ severity: 'error', summary: 'Fehler', detail: 'Login fehlgeschlagen', life: 10000 })
+  }
+}
 </script>
 
 <template>
-  <form class="form">
-  <span class="input-span">
-    <label for="email" class="label">Nutzername</label>
-    <input type="email" name="email" id="email"
-    /></span>
+  <Toast />
+  <form class="form" @submit.prevent="handleLogin">
     <span class="input-span">
-    <label for="password" class="label">Passwort</label>
-    <input type="password" name="password" id="password"
-    /></span>
+      <label for="password" class="label">Passwort</label>
+      <input type="password" v-model="password" name="password" id="password" required />
+    </span>
     <span class="span"></span>
     <input class="submit" type="submit" value="Log in" />
   </form>
@@ -38,7 +56,7 @@
   gap: 0.5rem;
 }
 
-.form input[type="email"],
+.form input[type="text"],
 .form input[type="password"] {
   border-radius: 0.5rem;
   padding: 1rem 0.75rem;
@@ -51,7 +69,7 @@
   outline: 2px solid var(--bg-dark);
 }
 
-.form input[type="email"]:focus,
+.form input[type="text"]:focus,
 .form input[type="password"]:focus {
   outline: 2px solid var(--clr);
 }

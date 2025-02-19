@@ -13,7 +13,7 @@ const redirect = () => {
   <div class="navbar-wrapper">
     <div class="nav-bar">
       <div class="nav-logo">
-        <img class="logo" src="../assets/vue.svg" alt="" />
+        <img class="logo" src="../assets/logo.png" alt="" />
       </div>
       <div class="nav-items">
         <router-link to="/" active-class="active" class="button">Auswahl</router-link>
@@ -42,6 +42,19 @@ a:active{
 
 .active{
   color: rgb(110, 231, 183);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+}
+
+.logo {
+  width: 60px;
+  height: auto;
+  object-fit: contain;
 }
 
 .navbar-wrapper {

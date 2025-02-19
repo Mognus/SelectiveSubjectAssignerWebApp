@@ -1,22 +1,38 @@
 <script setup lang="ts">
-import { ref, defineProps } from 'vue';
+import { ref, defineProps, onMounted } from 'vue';
 import Card from 'primevue/card';
 import Badge from 'primevue/badge';
+import axios from '../utils/api';
+import { useAuthStore } from '../stores/authStore';
+
+const authStore = useAuthStore();
+const subjects = ref<{ label: string; description: string; teacher: string; importantNote?: string }[]>([]);
+
+const fetchSubjects = async () => {
+  try {
+    const response = await axios.get('/subjects/', {
+      headers: { Authorization: `Bearer ${authStore.accessToken}` }
+    });
+    subjects.value = response.data.map((subject: any) => ({
+      label: subject.subject_name,
+      description: subject.subject_description,
+      teacher: subject.teacher || 'Unbekannter Lehrer',
+      importantNote: subject.important_note || ''
+    }));
+  } catch (error) {
+    console.error('Fehler beim Laden der Fächer', error);
+  }
+};
+
+onMounted(fetchSubjects);
 
 const props = defineProps<{ subjects?: { label: string; description: string; teacher: string; importantNote?: string }[] }>();
-
-const defaultSubjects = ref([
-  { label: 'Mathematik', description: 'Vertiefung in Algebra, Analysis und Geometrie', teacher: 'Herr Müller', importantNote: 'Stark nachgefragt' },
-  { label: 'Informatik', description: 'Einführung in Programmierung, Algorithmen und Datenstrukturen', teacher: 'Frau Schmidt' },
-  { label: 'Biologie', description: 'Molekularbiologie, Genetik und Ökosysteme', teacher: 'Herr Weber' },
-  { label: 'Physik', description: 'Mechanik, Elektrizität und Optik', teacher: 'Frau Meier', importantNote: 'Mathematikkenntnisse empfohlen' }
-]);
 </script>
 
 <template>
   <div class="subject-details">
     <div class="subject-boxes">
-      <Card v-for="subject in props.subjects ?? defaultSubjects" :key="subject.label" class="subject-card">
+      <Card v-for="subject in props.subjects ?? subjects" :key="subject.label" class="subject-card">
         <template #title>
           {{ subject.label }}
         </template>

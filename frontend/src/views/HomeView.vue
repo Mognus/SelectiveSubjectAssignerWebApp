@@ -1,17 +1,78 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import Dropdown from 'primevue/dropdown';
 import Card from 'primevue/card';
 import Button from 'primevue/button';
+import { useToast } from 'primevue/usetoast';
+import axios from '../utils/api';
+import { useAuthStore } from '../stores/authStore';
+import { useRouter } from 'vue-router';
+import Toast from 'primevue/toast';
 
-const firstChoice = ref('');
-const secondChoice = ref('');
-const thirdChoice = ref('');
-const options = ref<string[]>(['Option A', 'Option B', 'Option C', 'Option D']);
+const authStore = useAuthStore();
+const router = useRouter();
+const toast = useToast();
+
+const subjects = ref<{ subject_id: number; subject_name: string }[]>([]);
+const firstChoice = ref<number | null>(null);
+const secondChoice = ref<number | null>(null);
+const thirdChoice = ref<number | null>(null);
+const options = ref<{ label: string; value: number }[]>([]);
+
+const fetchSubjects = async () => {
+  try {
+    const response = await axios.get('/subjects/', {
+      headers: { Authorization: `Bearer ${authStore.accessToken}` }
+    });
+    subjects.value = response.data;
+
+    options.value = subjects.value.map((subject) => ({
+      label: subject.subject_name,
+      value: subject.subject_id
+    }));
+  } catch {
+    toast.add({ severity: 'error', summary: 'Fehler', detail: 'Kurse konnten nicht geladen werden.', life: 3000 });
+  }
+};
+
+const submitChoices = async () => {
+  if (!authStore.accessToken || !authStore.user) {
+    authStore.logout();
+    router.push('/login');
+    return;
+  }
+
+  try {
+    await axios.post('/verify-token/', { token: authStore.accessToken });
+
+    const requestData = {
+      first_choice: firstChoice.value,
+      second_choice: secondChoice.value,
+      third_choice: thirdChoice.value
+    };
+
+    await axios.patch(`/users/${authStore.user.id}/`, requestData, {
+      headers: { Authorization: `Bearer ${authStore.accessToken}` }
+    });
+
+    toast.add({ severity: 'success', summary: 'Gespeichert', detail: 'Deine Wünsche wurden gespeichert.', life: 3000 });
+
+    setTimeout(() => {
+      authStore.logout();
+      router.push('/login');
+    }, 3000);
+
+  } catch {
+    toast.add({ severity: 'error', summary: 'Fehler', detail: 'Speichern fehlgeschlagen.', life: 3000 });
+  }
+};
+
+onMounted(fetchSubjects);
 </script>
 
 <template>
   <div class="home">
+    <Toast />
     <div class="container">
       <Card class="custom-card">
         <template #title>
@@ -19,26 +80,26 @@ const options = ref<string[]>(['Option A', 'Option B', 'Option C', 'Option D']);
         </template>
         <template #content>
           <p class="description">
-            Bitte wähle die Kurse aus, diese Sie künftig besuchen möchtest.
+            Bitte wähle die Kurse aus, die du künftig besuchen möchtest.
           </p>
 
           <div class="select-group">
             <label for="first">1. Wunsch</label>
-            <Dropdown v-model="firstChoice" :options="options" placeholder="Wähle eine Option" class="custom-dropdown" />
+            <Dropdown v-model="firstChoice" :options="options" optionLabel="label" optionValue="value" placeholder="Wähle eine Option" class="custom-dropdown" />
           </div>
 
           <div class="select-group">
             <label for="second">2. Wunsch</label>
-            <Dropdown v-model="secondChoice" :options="options" placeholder="Wähle eine Option" class="custom-dropdown" />
+            <Dropdown v-model="secondChoice" :options="options" optionLabel="label" optionValue="value" placeholder="Wähle eine Option" class="custom-dropdown" />
           </div>
 
           <div class="select-group">
             <label for="third">3. Wunsch</label>
-            <Dropdown v-model="thirdChoice" :options="options" placeholder="Wähle eine Option" class="custom-dropdown" />
+            <Dropdown v-model="thirdChoice" :options="options" optionLabel="label" optionValue="value" placeholder="Wähle eine Option" class="custom-dropdown" />
           </div>
 
           <br>
-          <Button label="Absenden" class="confirm-button" />
+          <Button label="Absenden" class="confirm-button" @click="submitChoices" />
         </template>
       </Card>
     </div>
@@ -97,7 +158,6 @@ label {
   color: #fff;
 }
 
-/* Media Querries */
 @media (max-width:817px) {
   .container {
     width: 75%;
@@ -109,5 +169,4 @@ label {
     width: 95%;
   }
 }
-
 </style>
